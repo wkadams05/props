@@ -1,5 +1,8 @@
 package com.yahoo.props;
 
+import static com.yahoo.props.Utils.nonNullMessage;
+import static java.util.Objects.requireNonNull;
+
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -9,7 +12,7 @@ import com.yahoo.props.PropDefinerBuilder.TypeSetter;
 
 class PropImpl<CONTEXT, TYPE> implements Prop<CONTEXT, TYPE> {
     private String                    name;
-    private Function<CONTEXT, TYPE>   defaultValueInitializer;
+    private Function<CONTEXT, TYPE>   defaultInitializer;
     private TypeGetter<CONTEXT, TYPE> typeGetter;
     private TypeSetter<CONTEXT, TYPE> typeSetter;
     private EventHandler<CONTEXT>     afterInitEventHandler;
@@ -18,14 +21,14 @@ class PropImpl<CONTEXT, TYPE> implements Prop<CONTEXT, TYPE> {
                                       
     PropImpl(String name, TypeGetter<CONTEXT, TYPE> typeGetter, TypeSetter<CONTEXT, TYPE> typeSetter,
             EventHandler<CONTEXT> afterInitEventHandler, EventHandler<CONTEXT> afterGetEventHandler,
-            EventHandler<CONTEXT> afterSetEventHandler, Function<CONTEXT, TYPE> defaultValueInitializer) {
+            EventHandler<CONTEXT> afterSetEventHandler, Function<CONTEXT, TYPE> defaultInitializer) {
         this.name = name;
         this.typeGetter = typeGetter;
         this.typeSetter = typeSetter;
         this.afterInitEventHandler = afterInitEventHandler;
         this.afterGetEventHandler = afterGetEventHandler;
         this.afterSetEventHandler = afterSetEventHandler;
-        this.defaultValueInitializer = defaultValueInitializer;
+        this.defaultInitializer = defaultInitializer;
     }
     
     @Override
@@ -40,13 +43,18 @@ class PropImpl<CONTEXT, TYPE> implements Prop<CONTEXT, TYPE> {
     
     @Override
     public TYPE getFrom(CONTEXT context, TYPE substIfNull) {
+        
+        requireNonNull(context, nonNullMessage("context"));
+        
         TYPE value = typeGetter.getFrom(context, name);
         if (value == null) {
-            if (defaultValueInitializer != null) {
-                value = defaultValueInitializer.apply(context);
+            if (defaultInitializer != null) {
+                value = defaultInitializer.apply(context);
                 // initialize
                 typeSetter.setTo(context, name, value);
-                afterInitEventHandler.onEvent(context, name, value);
+                if (afterInitEventHandler != null) {
+                    afterInitEventHandler.onEvent(context, name, value);
+                }
             } else {
                 value = substIfNull;
             }
