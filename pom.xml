@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.yahoo</groupId>
   <artifactId>props</artifactId>
-  <version>0.9.0</version>
+  <version>1.0.0-SNAPSHOT</version>
   <name>Props - Property Access Utility for Java</name>
   <description>Props - Property Access Utility for Java</description>
 
@@ -39,15 +39,15 @@
   </dependencies>
 
   <distributionManagement>
+    <snapshotRepository>
+      <id>yahoo-local-snapshot</id>
+      <url>scpexe://artifactory-ssh-proxy.corp.yahoo.com:4443/maven-local-snapshot/</url>
+    </snapshotRepository>
     <repository>
       <id>artifactory.ops.yahoo.com-releases</id>
       <name>artifactory.ops.yahoo.com-releases</name>
       <url>scpexe://artifactory-ssh-proxy.corp.yahoo.com:4443/maven-local-release/</url>
     </repository>
-    <snapshotRepository>
-      <id>yahoo-local-snapshot</id>
-      <url>scpexe://artifactory-ssh-proxy.corp.yahoo.com:4443/maven-local-snapshot/</url>
-    </snapshotRepository>
   </distributionManagement>
 
   <build>
