@@ -59,6 +59,5 @@ public class ConfigTest {
         
         AVAILABILITY.setTo(configs, 123e-2);
         assertEquals(configs.getProperty("availability"), "1.23");
-        
     }
 }

@@ -1,6 +1,5 @@
 package com.yahoo.props;
 
-
 public interface Prop<CONTEXT, TYPE> {
     String getName();
     

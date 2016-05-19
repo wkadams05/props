@@ -1,5 +1,7 @@
 package com.yahoo.props.samples.config_from_properties;
 
+import static com.yahoo.props.samples.config_from_properties.Config.Helper.getDefiner;
+
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -14,8 +16,8 @@ import com.yahoo.props.PropDefinerBuilder;
 
 @SuppressWarnings("serial")
 public interface Config {
-    class Definer {
-        private static final PropDefiner<Properties> INSTANCE = buildDefiner();
+    class Helper {
+        private static final PropDefiner<Properties> DEFINER = buildDefiner();
         
         private static PropDefiner<Properties> buildDefiner() {
             PropDefinerBuilder<Properties> builder = PropDefinerBuilder.newBuilder(Properties.class);
@@ -46,26 +48,27 @@ public interface Config {
             builder.setTypeSetter(Colo.class, (props, key, value) -> props.setProperty(key, value.toString()));
             
             // Set<Colo>
-            builder.setTypeGetter(new TypeToken<Set<Colo>>() {},
-                    (props, key) -> Splitter.onPattern("\\s*,\\s*").omitEmptyStrings()
-                            .splitToList(props.getProperty(key, "")).stream()
-                            .map(colo -> Colo.valueOf(colo.trim().toUpperCase())).collect(Collectors.toSet()));
-            builder.setTypeSetter(new TypeToken<Set<Colo>>() {}, (props, key, value) -> props.setProperty(key,
+            builder.setTypeGetter(new TypeToken<Set<Colo>>() {
+            }, (props, key) -> Splitter.onPattern("\\s*,\\s*").omitEmptyStrings()
+                    .splitToList(props.getProperty(key, "")).stream()
+                    .map(colo -> Colo.valueOf(colo.trim().toUpperCase())).collect(Collectors.toSet()));
+            builder.setTypeSetter(new TypeToken<Set<Colo>>() {
+            }, (props, key, value) -> props.setProperty(key,
                     value.stream().map(colo -> colo.toString()).sorted().reduce((a, b) -> a + "," + b).get()));
                     
             return builder.build();
         }
         
-        private static PropDefiner<Properties> get() {
-            return INSTANCE;
+        static PropDefiner<Properties> getDefiner() {
+            return DEFINER;
         }
     }
     
-    Prop<Properties, String>    CNAME        = Definer.get().define("cname", String.class);
-    Prop<Properties, String[]>  ROLES        = Definer.get().define("roles", String[].class);
-    Prop<Properties, Colo>      MAIN         = Definer.get().define("main", Colo.class);
-    Prop<Properties, Set<Colo>> REPLICAS     = Definer.get().define("replicas", new TypeToken<Set<Colo>>() {},
-            props -> new HashSet<Colo>(0));
-    Prop<Properties, Integer>   PORT         = Definer.get().define("port", Integer.class);
-    Prop<Properties, Double>    AVAILABILITY = Definer.get().define("availability", Double.class, props -> 0.0d);
+    Prop<Properties, String>    CNAME        = getDefiner().define("cname", String.class);
+    Prop<Properties, String[]>  ROLES        = getDefiner().define("roles", String[].class);
+    Prop<Properties, Colo>      MAIN         = getDefiner().define("main", Colo.class);
+    Prop<Properties, Set<Colo>> REPLICAS     = getDefiner().define("replicas", new TypeToken<Set<Colo>>() {
+                                             }, props -> new HashSet<Colo>(0));
+    Prop<Properties, Integer>   PORT         = getDefiner().define("port", Integer.class);
+    Prop<Properties, Double>    AVAILABILITY = getDefiner().define("availability", Double.class, props -> 0.0d);
 }

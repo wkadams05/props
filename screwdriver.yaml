@@ -1,4 +1,9 @@
 platform: java
 shared:
   notification_email: jw@yahoo-inc.com
+  steps:
+    default-maven-build:
+    # Override default maven build options and settings
+      options: "-X"
+      settings: "-Dscrewdriver3"
 jobs: {}
