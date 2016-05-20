@@ -21,4 +21,6 @@ public interface Prop<CONTEXT, TYPE> {
     boolean isPresent(CONTEXT context);
     
     Optional<Function<CONTEXT, TYPE>> getDefaultInitializer();
+    
+    void overrideDefaultInitializer(Function<CONTEXT, TYPE> defaultInitializer);
 }
