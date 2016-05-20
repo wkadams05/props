@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.yahoo</groupId>
   <artifactId>props</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.1</version>
   <name>Props - Property Access Utility for Java</name>
   <description>Props - Property Access Utility for Java</description>
 
@@ -16,8 +16,12 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
     <maven-release-plugin.version>2.5.2</maven-release-plugin.version>
+    <maven-surefire-plugin.version>2.17</maven-surefire-plugin.version>
+    <maven-surefire-report-plugin.version>${maven-surefire-plugin.version}</maven-surefire-report-plugin.version>
+    <maven-clover2-plugin.version>4.0.0</maven-clover2-plugin.version>
     <wagon-ssh-external.version>1.0-beta-6</wagon-ssh-external.version>
     <target_jdk_version>1.8</target_jdk_version>
+    <buildtype>test</buildtype>
   </properties>
 
   <dependencies>
@@ -91,5 +95,106 @@
       </plugins>
     </pluginManagement>
   </build>
+
+  <profiles>
+    <profile>
+      <id>screwdriver-v3</id>
+      <activation>
+        <property>
+          <name>screwdriver3</name>
+        </property>
+      </activation>
+      <properties>
+        <buildtype>release</buildtype>
+        <maven.yinst.create.skip>true</maven.yinst.create.skip>
+        <project.reporting.outputDirectory>${env.TEST_RESULTS_DIR}</project.reporting.outputDirectory>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.atlassian.maven.plugins</groupId>
+            <artifactId>maven-clover2-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>clover</id>
+                <phase>prepare-package</phase>
+                <goals>
+                  <goal>instrument-test</goal>
+                  <goal>clover</goal>
+                </goals>
+                <configuration>
+                  <targetPercentage>1%</targetPercentage>
+                  <generateHtml>true</generateHtml>
+                  <generateXml>true</generateXml>
+                  <jdk>${target_jdk_version}</jdk>
+                  <includesAllSourceRoots>false</includesAllSourceRoots>
+                  <licenseLocation>/home/y/conf/clover/clover.license</licenseLocation>
+                </configuration>
+              </execution>
+            </executions>
+            <configuration>
+              <includesAllSourceRoots>false</includesAllSourceRoots>
+              <jdk>${target_jdk_version}</jdk>
+              <licenseLocation>/home/y/conf/clover/clover.license</licenseLocation>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>${maven-surefire-plugin.version}</version>
+            <configuration>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-report-plugin</artifactId>
+            <version>${maven-surefire-report-plugin.version}</version>
+            <configuration>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>yahoo.yinst.maven_plugins</groupId>
+            <artifactId>yjava_maven_plugins_yinst</artifactId>
+            <executions>
+              <execution>
+                <id>yinst-resources</id>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>resources</goal>
+                </goals>
+                <configuration>
+                  <buildtype>${buildtype}</buildtype>
+                </configuration>
+              </execution>
+              <execution>
+                <id>yinst-yicf</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>yicf</goal>
+                </goals>
+                <configuration>
+                  <buildtype>${buildtype}</buildtype>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+      <reporting>
+        <plugins>
+          <plugin>
+            <groupId>com.atlassian.maven.plugins</groupId>
+            <artifactId>maven-clover2-plugin</artifactId>
+            <version>${maven-clover2-plugin.version}</version>
+            <configuration>
+              <jdk>${target_jdk_version}</jdk>
+              <licenseLocation>/home/y/conf/clover/clover.license</licenseLocation>
+            </configuration>
+          </plugin>
+        </plugins>
+      </reporting>
+    </profile>
+
+  </profiles>
 
 </project>
