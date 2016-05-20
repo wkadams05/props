@@ -43,10 +43,18 @@ if (myFlag != null) {
 properties.setProperty(Key.MY_DOUBLE, String.valueOf(myDouble)); // looks better
 ```
 
-Still, there are many potential issues to tackle.  They are,
+Still, there are many potential issues and inconveniences that bother developers.  For example,
 
 1. Type safety
-   * Runtime error can happen if other codes access 
-2. 
-
+   * Types of properties are basically unknown, until one finds the code where the value is set to.
+   * e.g. Some other developer may cast the value of ```Key.MY_FLAG``` to ```Boolean``` presumably.  The error won't be captured during build time but runtime.
+   ```java
+   // rutime error!
+   boolean myFlag = Boolean.parseBoolean(p.getProperty(Key.MY_FLAG, "false"));
+   ```
+2. Tedious type handling
+   * Every code which either read from or write to the context should repeat type casting which makes deveopment counter-productive and hurts readability of codes.
+3. Bothersome ```null``` checking
+   * ```null``` checking (or ```if``` condition with ```contains(key)``` like call) is necessary whenever to confirm ```absent``` state.
+   * For some conditional operations like ```setIfAbsent``` semantic, the code gets complicated with ```if``` clauses.
 
