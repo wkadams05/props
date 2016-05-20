@@ -4,6 +4,7 @@ import static com.yahoo.props.Utils.nonNullMessage;
 import static java.util.Objects.requireNonNull;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 
 import com.yahoo.props.PropDefinerBuilder.EventHandler;
@@ -115,5 +116,10 @@ class PropImpl<CONTEXT, TYPE> implements Prop<CONTEXT, TYPE> {
     @Override
     public int hashCode() {
         return Objects.hash(getName());
+    }
+    
+    @Override
+    public Optional<Function<CONTEXT, TYPE>> getDefaultInitializer() {
+        return Optional.ofNullable(defaultInitializer);
     }
 }

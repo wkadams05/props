@@ -1,5 +1,8 @@
 package com.yahoo.props;
 
+import java.util.Optional;
+import java.util.function.Function;
+
 public interface Prop<CONTEXT, TYPE> {
     String getName();
     
@@ -16,4 +19,6 @@ public interface Prop<CONTEXT, TYPE> {
     boolean isAbsent(CONTEXT context);
     
     boolean isPresent(CONTEXT context);
+    
+    Optional<Function<CONTEXT, TYPE>> getDefaultInitializer();
 }

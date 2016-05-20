@@ -9,7 +9,7 @@ _Props_ is a small but useful Java utility which makes property access from/to t
 <dependency>
     <groupId>com.yahoo</groupId>
     <artifactId>props</artifactId>
-    <version>1.1.2</version>
+    <version>1.1.3</version>
 </dependency>
 ```
 
