@@ -18,7 +18,7 @@ class PropImpl<CONTEXT, TYPE> implements Prop<CONTEXT, TYPE> {
     private EventHandler<CONTEXT>     afterInitEventHandler;
     private EventHandler<CONTEXT>     afterGetEventHandler;
     private EventHandler<CONTEXT>     afterSetEventHandler;
-                                      
+    
     PropImpl(String name, TypeGetter<CONTEXT, TYPE> typeGetter, TypeSetter<CONTEXT, TYPE> typeSetter,
             EventHandler<CONTEXT> afterInitEventHandler, EventHandler<CONTEXT> afterGetEventHandler,
             EventHandler<CONTEXT> afterSetEventHandler, Function<CONTEXT, TYPE> defaultInitializer) {
@@ -74,10 +74,27 @@ class PropImpl<CONTEXT, TYPE> implements Prop<CONTEXT, TYPE> {
     }
     
     @Override
-    public void setToIfNull(CONTEXT context, TYPE value) {
-        if (getFrom(context) == null) {
+    public void setToIfAbsent(CONTEXT context, TYPE value) {
+        if (isAbsent(context)) {
             setTo(context, value);
         }
+    }
+    
+    @Override
+    public void setToIfPresent(CONTEXT context, TYPE value) {
+        if (isPresent(context)) {
+            setTo(context, value);
+        }
+    }
+    
+    @Override
+    public boolean isAbsent(CONTEXT context) {
+        return getFrom(context) == null;
+    }
+    
+    @Override
+    public boolean isPresent(CONTEXT context) {
+        return !isAbsent(context);
     }
     
     @Override

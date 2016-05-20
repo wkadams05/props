@@ -7,7 +7,6 @@ import static com.yahoo.props.samples.config_from_properties.Config.PORT;
 import static com.yahoo.props.samples.config_from_properties.Config.REPLICAS;
 import static com.yahoo.props.samples.config_from_properties.Config.ROLES;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.io.IOException;
@@ -34,8 +33,10 @@ public class ConfigTest {
         assertTrue(REPLICAS.getFrom(configs).contains(Colo.BF1));
         assertTrue(REPLICAS.getFrom(configs).contains(Colo.NE1));
         assertEquals(AVAILABILITY.getFrom(configs), 0.0d);// default
-        assertNull(PORT.getFrom(configs));
-        assertNull(ROLES.getFrom(configs));
+        assertTrue(PORT.isAbsent(configs));
+        assertTrue(!PORT.isPresent(configs));
+        assertTrue(ROLES.isAbsent(configs));
+        assertTrue(!ROLES.isPresent(configs));
         
         CNAME.setTo(configs, "v2.yahooapis.com");
         assertEquals(configs.getProperty("cname"), "v2.yahooapis.com");
@@ -50,10 +51,16 @@ public class ConfigTest {
         Set<Colo> replicas = REPLICAS.getFrom(configs);
         assertEquals(replicas.size(), 4);
         
+        PORT.setToIfPresent(configs, 9999);
+        // unchanged since it's absent
+        assertTrue(PORT.isAbsent(configs));
         PORT.setTo(configs, 4080);
         assertEquals(configs.getProperty("port"), "4080");
         assertTrue(PORT.getFrom(configs) == 4080);
         
+        AVAILABILITY.setToIfAbsent(configs, 0.999d);
+        // unchanged since initialized with default
+        assertEquals(configs.getProperty("availability"), "0.0");
         AVAILABILITY.setTo(configs, 0.12345678d);
         assertEquals(configs.getProperty("availability"), "0.12345678");
         
