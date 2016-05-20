@@ -83,6 +83,6 @@ if (My.FLAG.isPresent(p)) {
 ```
 
 Please check the samples below for more details.
-https://git.corp.yahoo.com/jw/props/tree/master/src/test/java/com/yahoo/props/samples/config_from_properties
+https://git.corp.yahoo.com/localsearch/props/tree/master/src/test/java/com/yahoo/props/samples/config_from_properties
 
 The power of _Props_ framework is that code can access any arbitrary context objects (not only ```java.util.Properties```) via the same _Props_ framework interfaces (e.g. HTTP parameters).
