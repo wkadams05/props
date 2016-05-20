@@ -122,4 +122,9 @@ class PropImpl<CONTEXT, TYPE> implements Prop<CONTEXT, TYPE> {
     public Optional<Function<CONTEXT, TYPE>> getDefaultInitializer() {
         return Optional.ofNullable(defaultInitializer);
     }
+    
+    @Override
+    public void overrideDefaultInitializer(Function<CONTEXT, TYPE> defaultInitializer) {
+        this.defaultInitializer = defaultInitializer;
+    }
 }
