@@ -1,10 +1,20 @@
 # Props - Property Access Utility for Java
-
-[![Build Status](https://api.screwdriver.corp.yahoo.com:4443/badge/105768/component/icon)](https://api.screwdriver.corp.yahoo.com:4443/badge/105768/component/target)
-
 _Props_ is a small but useful Java utility which makes property access from/to type-less context easy and safe.  Code gets shorter, simpler, maintainable and flawless.
 
-For example, the following code is a common pattern of accessing data from/to Java properties (java.util.Properties).
+## SD Build Status
+[![Build Status](https://api.screwdriver.corp.yahoo.com:4443/badge/105768/component/icon)](https://api.screwdriver.corp.yahoo.com:4443/badge/105768/component/target)
+
+## Dependency Declaration ([Artifactory](http://artifactory.ops.yahoo.com:4080/webapp/#/artifacts/browse/tree/General/maven-local-release/com/yahoo/props))
+```xml
+<dependency>
+    <groupId>com.yahoo</groupId>
+    <artifactId>props</artifactId>
+    <version>${latest-release-version}</version>
+</dependency>
+```
+
+## Quick Start
+The following code is a common pattern of accessing data from/to Java properties (java.util.Properties).
 ```java
 Properties properties = new Properties();
 properties.load(...);
