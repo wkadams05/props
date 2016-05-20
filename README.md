@@ -1,5 +1,7 @@
 # Props - Property Access Utility for Java
 
+[![Build Status](https://api.screwdriver.corp.yahoo.com:4443/badge/105768/component/icon)](https://api.screwdriver.corp.yahoo.com:4443/badge/105768/component/target)
+
 _Props_ is a small but useful Java utility which makes property access from/to type-less context easy and safe.  Code gets shorter, simpler, maintainable and flawless.
 
 For example, the following code is a common pattern of accessing data from/to Java properties (java.util.Properties).
