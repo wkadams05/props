@@ -70,3 +70,7 @@ if (My.FLAG.getFrom(properties) != null) {
   System.out.println("flag is set");
 }
 ```
+
+More details like how ```getDefiner()``` is given, please refer to a sample case at https://git.corp.yahoo.com/jw/props/tree/master/src/test/java/com/yahoo/props/samples/config_from_properties
+
+The power of _Props_ framework is that code can access any arbitrary context objects (not only ```java.util.Properties```) via the same _Props_ framework interfaces (e.g. HTTP parameters).
