@@ -14,24 +14,23 @@ _Props_ is a small but useful Java utility which makes property access from/to t
 ```
 
 ## Quick Start
-The following code is a common pattern of accessing data from/to Java properties (java.util.Properties).
+A common code pattern of accessing Java properties (```java.util.Properties```) may look like the following.
 ```java
-Properties properties = new Properties();
-properties.load(...);
+Properties p = new Properties();
+p.load(...);
 
-double myDouble = Double.parseDouble(properties.getProperty("my-double", "0.1d"));
-Integer myFlag = properties.getProperty("my-flag") != null ? Integer.parseInt(p.getProperty("my-flag")) : null;
+double myDouble = Double.parseDouble(p.getProperty("my-double", "0.1d"));
+Integer myFlag = p.getProperty("my-flag") != null ? Integer.parseInt(p.getProperty("my-flag")) : null;
 
 myDouble *= 0.2d;
 if (myFlag != null) {
   System.out.println("flag is set");
 }
 
-properties.setProperty("my-dbl" /* typo by mistake by other developer */, String.valueOf(myDouble));
+p.setProperty("my-dbl" /* typo by mistake by other developer */, String.valueOf(myDouble));
 ```
 
-The team introduced constants to address typo issues.
-
+With the discovery of the typo above, a refactoring may get introduced with constants.
 ```java
 interface Key {
   String MY_DOUBLE = "my-double";
@@ -52,10 +51,10 @@ if (myFlag != null) {
   System.out.println("flag is set");
 }
 
-properties.setProperty(Key.MY_DOUBLE, String.valueOf(myDouble)); // looks better
+p.setProperty(Key.MY_DOUBLE, String.valueOf(myDouble)); // looks better
 ```
 
-Still, there are many potential issues and inconveniences that bother developers.  For example,
+Still, there are many potential issues and inconveniences that bother developers as follows.
 
 1. _Type unknown_
    * Types of properties are basically unknown, until one finds the code where the value is set to.
@@ -65,24 +64,25 @@ Still, there are many potential issues and inconveniences that bother developers
    boolean myFlag = Boolean.parseBoolean(p.getProperty(Key.MY_FLAG, "false"));
    ```
 2. _Tedious type juggling_
-   * Every code which either read from or write to the context should repeat type casting which makes deveopment counter-productive and hurts readability of codes.
+   * Every code which either read from or write to the context should repeat type casting which severely hurts development productivity and code readability.
 3. _Bothersome ```null``` checking_
    * ```null``` checking (or ```if``` condition with ```contains(key)``` like call) is necessary whenever to confirm ```absent``` state.
-   * For some conditional operations like ```setIfAbsent``` semantic, the code gets complicated with ```if``` clauses.
+   * For some conditional operations like ```setIfAbsent``` semantic, the code gets complicated with extra ```if``` clause.
 
-The following is the _Props_ version for the example code above.
+With _Props_, the code above gets changed as follows.
 ```java
 interface My {
   Props<Properties, Double> DOUBLE = getDefiner().define("my-double", Double.class, properties -> 1.0d);
   Props<Properties, Integer> FLAG = getDefiner().define("my-flag", Integer.class);
 }
 
-My.DOUBLE.setTo(properties, My.DOUBLE.getFrom(properties) * 0.2d);
-if (My.FLAG.getFrom(properties) != null) {
+My.DOUBLE.setTo(p, My.DOUBLE.getFrom(p) * 0.2d);
+if (My.FLAG.isPresent(p)) {
   System.out.println("flag is set");
 }
 ```
 
-More details like how ```getDefiner()``` is given, please refer to a sample case at https://git.corp.yahoo.com/jw/props/tree/master/src/test/java/com/yahoo/props/samples/config_from_properties
+Please check the samples below for more details.
+https://git.corp.yahoo.com/jw/props/tree/master/src/test/java/com/yahoo/props/samples/config_from_properties
 
 The power of _Props_ framework is that code can access any arbitrary context objects (not only ```java.util.Properties```) via the same _Props_ framework interfaces (e.g. HTTP parameters).
