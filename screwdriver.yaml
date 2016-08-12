@@ -10,6 +10,8 @@ shared:
         path: "**/target/surefire-reports/**"
 
 jobs:
+  component:
+    triggers: [release]
   release:
     order: [init, assemble, flatten, restore, maven-build, maven-release-prepare, maven-release-perform]
     
