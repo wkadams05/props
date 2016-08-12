@@ -1,4 +1,15 @@
 platform: java
+
 shared:
-  notification_email: jw@yahoo-inc.com
-jobs: {}
+  notifications:
+    email: localsearch-vespa-devel@yahoo-inc.com
+  plugins:
+    test_results:
+      type: junit
+      parameters:
+        path: "**/target/surefire-reports/**"
+
+jobs:
+  release:
+    order: [init, assemble, flatten, restore, maven-build, maven-release-prepare, maven-release-perform]
+    
