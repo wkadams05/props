@@ -3,12 +3,12 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.yahoo</groupId>
   <artifactId>props</artifactId>
-  <version>1.1.6-SNAPSHOT</version>
+  <version>1.1.7-SNAPSHOT</version>
   <name>Props - Property Access Utility for Java</name>
   <description>Props - Property Access Utility for Java</description>
 
   <scm>
-    <developerConnection>scm:git:ssh://git@git.corp.yahoo.com:localsearch/props.git</developerConnection>
+    <developerConnection>scm:git:ssh://git@git.corp.yahoo.com/localsearch/props.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
@@ -63,21 +63,6 @@
       </extension>
     </extensions>
 
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>${target_jdk_version}</source>
-          <target>${target_jdk_version}</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-release-plugin</artifactId>
-        <version>${maven-release-plugin.version}</version>
-      </plugin>
-    </plugins>
     <pluginManagement>
       <plugins>
         <plugin>
