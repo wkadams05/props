@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.yahoo</groupId>
   <artifactId>props</artifactId>
-  <version>1.1.8</version>
+  <version>1.1.9-SNAPSHOT</version>
   <name>Props - Property Access Utility for Java</name>
   <description>Props - Property Access Utility for Java</description>
 
