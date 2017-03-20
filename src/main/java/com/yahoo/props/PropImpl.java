@@ -3,6 +3,7 @@ package com.yahoo.props;
 import static com.yahoo.props.Utils.nonNullMessage;
 import static java.util.Objects.requireNonNull;
 
+import java.lang.reflect.Type;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
@@ -10,9 +11,12 @@ import java.util.function.Function;
 import com.yahoo.props.PropDefinerBuilder.EventHandler;
 import com.yahoo.props.PropDefinerBuilder.TypeGetter;
 import com.yahoo.props.PropDefinerBuilder.TypeSetter;
+import com.yahoo.props.PropDefinerBuilder.ComprehensiveTypeGetter;
+import com.yahoo.props.PropDefinerBuilder.ComprehensiveTypeSetter;
 
 class PropImpl<CONTEXT, TYPE> implements Prop<CONTEXT, TYPE> {
     private String                    name;
+    private Type                      type;
     private Function<CONTEXT, TYPE>   defaultInitializer;
     private TypeGetter<CONTEXT, TYPE> typeGetter;
     private TypeSetter<CONTEXT, TYPE> typeSetter;
@@ -20,10 +24,11 @@ class PropImpl<CONTEXT, TYPE> implements Prop<CONTEXT, TYPE> {
     private EventHandler<CONTEXT>     afterGetEventHandler;
     private EventHandler<CONTEXT>     afterSetEventHandler;
     
-    PropImpl(String name, TypeGetter<CONTEXT, TYPE> typeGetter, TypeSetter<CONTEXT, TYPE> typeSetter,
+    PropImpl(String name, Type type, TypeGetter<CONTEXT, TYPE> typeGetter, TypeSetter<CONTEXT, TYPE> typeSetter,
             EventHandler<CONTEXT> afterInitEventHandler, EventHandler<CONTEXT> afterGetEventHandler,
             EventHandler<CONTEXT> afterSetEventHandler, Function<CONTEXT, TYPE> defaultInitializer) {
         this.name = name;
+        this.type = type;
         this.typeGetter = typeGetter;
         this.typeSetter = typeSetter;
         this.afterInitEventHandler = afterInitEventHandler;
@@ -42,17 +47,33 @@ class PropImpl<CONTEXT, TYPE> implements Prop<CONTEXT, TYPE> {
         return getFrom(context, null);
     }
     
+    private TYPE callTypeGetter(CONTEXT context) {
+        if (typeGetter instanceof ComprehensiveTypeGetter) {
+            return ((ComprehensiveTypeGetter<CONTEXT, TYPE>) typeGetter).getFrom(context, type, name);
+        } else {
+            return typeGetter.getFrom(context, name);
+        }
+    }
+    
+    private void callTypeSetter(CONTEXT context, TYPE value) {
+        if (typeSetter instanceof ComprehensiveTypeSetter) {
+            ((ComprehensiveTypeSetter<CONTEXT, TYPE>) typeSetter).setTo(context, type, name, value);
+        } else {
+            typeSetter.setTo(context, name, value);
+        }
+    }
+    
     @Override
     public TYPE getFrom(CONTEXT context, TYPE substIfNull) {
         
         requireNonNull(context, nonNullMessage("context"));
         
-        TYPE value = typeGetter.getFrom(context, name);
+        TYPE value = callTypeGetter(context);
         if (value == null) {
             if (defaultInitializer != null) {
                 value = defaultInitializer.apply(context);
                 // initialize
-                typeSetter.setTo(context, name, value);
+                callTypeSetter(context, value);
                 if (afterInitEventHandler != null) {
                     afterInitEventHandler.onEvent(context, name, value);
                 }
@@ -68,7 +89,7 @@ class PropImpl<CONTEXT, TYPE> implements Prop<CONTEXT, TYPE> {
     
     @Override
     public void setTo(CONTEXT context, TYPE value) {
-        typeSetter.setTo(context, name, value);
+        callTypeSetter(context, value);
         if (afterSetEventHandler != null) {
             afterSetEventHandler.onEvent(context, name, value);
         }

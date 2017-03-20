@@ -13,6 +13,8 @@ import com.google.common.reflect.TypeToken;
 import com.yahoo.props.Prop;
 import com.yahoo.props.PropDefiner;
 import com.yahoo.props.PropDefinerBuilder;
+import com.yahoo.props.TypeFilter;
+import com.yahoo.props.Utils;
 
 @SuppressWarnings("serial")
 public interface Config {
@@ -33,29 +35,29 @@ public interface Config {
                     (props, key) -> props.getProperty(key) != null ? props.getProperty(key).split("\\s*,\\s*") : null);
             builder.setTypeSetter(String[].class,
                     (props, key, value) -> props.setProperty(key, Joiner.on(',').join(value)));
-                    
+            
             // Integer
             builder.setTypeGetter(Integer.class,
                     (props, key) -> props.getProperty(key) != null ? Integer.parseInt(props.getProperty(key)) : null);
-                    
+            
             // Double
             builder.setTypeGetter(Double.class,
                     (props, key) -> props.getProperty(key) != null ? Double.parseDouble(props.getProperty(key)) : null);
-                    
-            // Colo (Enum)
-            builder.setTypeGetter(Colo.class, (props, key) -> props.getProperty(key) != null
-                    ? Colo.valueOf(props.getProperty(key).toUpperCase()) : null);
-            builder.setTypeSetter(Colo.class, (props, key, value) -> props.setProperty(key, value.toString()));
+            
+            // Enum types
+            builder.setTypeGetter(TypeFilter.ENUM,
+                    (props, type, key) -> Utils.resolveEnumValue(type, props.getProperty(key)));
+            builder.setTypeSetter(TypeFilter.ENUM,
+                    (props, type, key, value) -> props.setProperty(key, value.toString()));
             
             // Set<Colo>
-            builder.setTypeGetter(new TypeToken<Set<Colo>>() {
-            }, (props, key) -> Splitter.onPattern("\\s*,\\s*").omitEmptyStrings()
-                    .splitToList(props.getProperty(key, "")).stream()
-                    .map(colo -> Colo.valueOf(colo.trim().toUpperCase())).collect(Collectors.toSet()));
-            builder.setTypeSetter(new TypeToken<Set<Colo>>() {
-            }, (props, key, value) -> props.setProperty(key,
+            builder.setTypeGetter(new TypeToken<Set<Colo>>() {},
+                    (props, key) -> Splitter.onPattern("\\s*,\\s*").omitEmptyStrings()
+                            .splitToList(props.getProperty(key, "")).stream()
+                            .map(colo -> Colo.valueOf(colo.trim().toUpperCase())).collect(Collectors.toSet()));
+            builder.setTypeSetter(new TypeToken<Set<Colo>>() {}, (props, key, value) -> props.setProperty(key,
                     value.stream().map(colo -> colo.toString()).sorted().reduce((a, b) -> a + "," + b).get()));
-                    
+            
             return builder.build();
         }
         
@@ -67,8 +69,9 @@ public interface Config {
     Prop<Properties, String>    CNAME        = getDefiner().define("cname", String.class);
     Prop<Properties, String[]>  ROLES        = getDefiner().define("roles", String[].class);
     Prop<Properties, Colo>      MAIN         = getDefiner().define("main", Colo.class);
-    Prop<Properties, Set<Colo>> REPLICAS     = getDefiner().define("replicas", new TypeToken<Set<Colo>>() {
-                                             }, props -> new HashSet<Colo>(0));
+    Prop<Properties, Set<Colo>> REPLICAS     = getDefiner().define("replicas", new TypeToken<Set<Colo>>() {},
+            props -> new HashSet<Colo>(0));
     Prop<Properties, Integer>   PORT         = getDefiner().define("port", Integer.class);
     Prop<Properties, Double>    AVAILABILITY = getDefiner().define("availability", Double.class, props -> 0.0d);
+    Prop<Properties, Env>       ENV          = getDefiner().define("env", Env.class);
 }
