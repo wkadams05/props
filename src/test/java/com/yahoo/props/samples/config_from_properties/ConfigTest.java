@@ -2,6 +2,7 @@ package com.yahoo.props.samples.config_from_properties;
 
 import static com.yahoo.props.samples.config_from_properties.Config.AVAILABILITY;
 import static com.yahoo.props.samples.config_from_properties.Config.CNAME;
+import static com.yahoo.props.samples.config_from_properties.Config.ENV;
 import static com.yahoo.props.samples.config_from_properties.Config.MAIN;
 import static com.yahoo.props.samples.config_from_properties.Config.PORT;
 import static com.yahoo.props.samples.config_from_properties.Config.REPLICAS;
@@ -24,7 +25,8 @@ public class ConfigTest {
         Properties configs = new Properties();
         configs.load(new StringReader("cname=v1.yahooapis.com\n"//
                 + "main=GQ1\n"//
-                + "replicas=BF1,NE1"//
+                + "replicas=BF1,NE1\n"//
+                + "env=stage" //
         ));
         
         assertEquals(CNAME.getFrom(configs), "v1.yahooapis.com");
@@ -37,6 +39,8 @@ public class ConfigTest {
         assertTrue(!PORT.isPresent(configs));
         assertTrue(ROLES.isAbsent(configs));
         assertTrue(!ROLES.isPresent(configs));
+        assertTrue(ENV.isPresent(configs));
+        assertEquals(ENV.getFrom(configs), Env.STAGE);
         
         CNAME.setTo(configs, "v2.yahooapis.com");
         assertEquals(configs.getProperty("cname"), "v2.yahooapis.com");
@@ -66,5 +70,8 @@ public class ConfigTest {
         
         AVAILABILITY.setTo(configs, 123e-2);
         assertEquals(configs.getProperty("availability"), "1.23");
+        
+        ENV.setTo(configs, Env.PROD);
+        assertEquals(ENV.getFrom(configs), Env.PROD);
     }
 }
