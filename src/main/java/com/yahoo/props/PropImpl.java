@@ -23,7 +23,7 @@ class PropImpl<CONTEXT, TYPE> implements Prop<CONTEXT, TYPE> {
     private EventHandler<CONTEXT>           afterInitEventHandler;
     private EventHandler<CONTEXT>           afterGetEventHandler;
     private EventHandler<CONTEXT>           afterSetEventHandler;
-    private List<Function<CONTEXT, Object>> targetMonitors;
+    private List<Function<CONTEXT, Object>> dependencyAccessList;
 
     PropImpl(String name,
              Type type,
@@ -66,39 +66,39 @@ class PropImpl<CONTEXT, TYPE> implements Prop<CONTEXT, TYPE> {
         } else {
             typeSetter.setTo(context, name, value);
         }
-        updateTargetHashes(context, value);
+        updateDependencyHashes(context, value);
     }
 
-    private void updateTargetHashes(CONTEXT context, TYPE value) {
-        if (hasTargetMonitors()) {
-            for (int i = 0; i < targetMonitors.size(); i++) {
-                Object target = targetMonitors.get(i).apply(context);
+    private void updateDependencyHashes(CONTEXT context, TYPE value) {
+        if (hasDependencies()) {
+            for (int i = 0; i < dependencyAccessList.size(); i++) {
+                Object dependency = dependencyAccessList.get(i).apply(context);
                 if (value == null) {
-                    clearTargetHash(context, i);
+                    clearDependencyHash(context, i);
                 } else {
-                    storeTargetHash(context, i, target);
+                    storeDependencyHash(context, i, dependency);
                 }
             }
         }
     }
 
-    private void storeTargetHash(CONTEXT context, int no, Object nullableTarget) {
-        internalSetter.setTo(context, targetKey(no), targetHash(nullableTarget));
+    private void storeDependencyHash(CONTEXT context, int no, Object nullableTarget) {
+        internalSetter.setTo(context, dependencyKey(no), dependencyHash(nullableTarget));
     }
 
-    private void clearTargetHash(CONTEXT context, int no) {
-        internalSetter.setTo(context, targetKey(no), null);
+    private void clearDependencyHash(CONTEXT context, int no) {
+        internalSetter.setTo(context, dependencyKey(no), null);
     }
 
-    private Optional<String> readTargetHash(CONTEXT context, int no) {
-        return Optional.of(internalGetter.getFrom(context, targetKey(no)));
+    private Optional<String> readDependencyHash(CONTEXT context, int no) {
+        return Optional.of(internalGetter.getFrom(context, dependencyKey(no)));
     }
 
-    private String targetKey(int no) {
-        return String.format("%s-TARGET_MONITOR#%d", name, no);
+    private String dependencyKey(int no) {
+        return String.format("%s-DEPENDENCY#%d", name, no);
     }
 
-    private String targetHash(Object nullableTarget) {
+    private String dependencyHash(Object nullableTarget) {
         return (nullableTarget == null) ? "NULL" : String.valueOf(nullableTarget.hashCode());
     }
 
@@ -106,8 +106,8 @@ class PropImpl<CONTEXT, TYPE> implements Prop<CONTEXT, TYPE> {
         return valueNullable != null;
     }
 
-    private boolean hasTargetMonitors() {
-        return targetMonitors != null && targetMonitors.size() > 0;
+    private boolean hasDependencies() {
+        return dependencyAccessList != null && dependencyAccessList.size() > 0;
     }
 
     private boolean hasDefaultInitializer() {
@@ -115,11 +115,11 @@ class PropImpl<CONTEXT, TYPE> implements Prop<CONTEXT, TYPE> {
     }
 
 
-    private boolean isAnyMonitoringTargetChanged(CONTEXT context) {
-        for (int no = 0; no < targetMonitors.size(); no++) {
-            Object target = targetMonitors.get(no).apply(context);
-            String newHash = targetHash(target);
-            Optional<String> oldHash = readTargetHash(context, no);
+    private boolean hasAnyDependencyChanged(CONTEXT context) {
+        for (int no = 0; no < dependencyAccessList.size(); no++) {
+            Object target = dependencyAccessList.get(no).apply(context);
+            String newHash = dependencyHash(target);
+            Optional<String> oldHash = readDependencyHash(context, no);
             if (oldHash.isPresent() && !oldHash.get().equals(newHash)) {
                 return true;
             }
@@ -136,8 +136,8 @@ class PropImpl<CONTEXT, TYPE> implements Prop<CONTEXT, TYPE> {
 
         if (isNotNull(value)
                 && hasDefaultInitializer()
-                && hasTargetMonitors()
-                && isAnyMonitoringTargetChanged(context)) {
+                && hasDependencies()
+                && hasAnyDependencyChanged(context)) {
             value = null;
             setTo(context, null);
         }
@@ -199,11 +199,11 @@ class PropImpl<CONTEXT, TYPE> implements Prop<CONTEXT, TYPE> {
     }
 
     @Override
-    public Prop<CONTEXT, TYPE> addTargetMonitorForReset(Function<CONTEXT, Object> targetMonitor) {
-        if (targetMonitors == null) {
-            targetMonitors = new ArrayList<>();
+    public Prop<CONTEXT, TYPE> addResetDependency(Function<CONTEXT, Object> dependencyAccess) {
+        if (dependencyAccessList == null) {
+            dependencyAccessList = new ArrayList<>();
         }
-        targetMonitors.add(targetMonitor);
+        dependencyAccessList.add(dependencyAccess);
         return this;
     }
 }

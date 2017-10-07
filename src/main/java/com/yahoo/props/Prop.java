@@ -36,17 +36,5 @@ public interface Prop<CONTEXT, TYPE> {
 
     void overrideDefaultInitializer(Function<CONTEXT, TYPE> defaultInitializer);
 
-    /**
-     * <p>
-     * Adds target monitor (access to monitoring target object). If any of monitoring targets change and defaultInitializer exists,
-     * the value gets reset to be re-initialized.
-     * </p>
-     * <p>
-     * This takes no effect unless defaultInitializer is set.
-     * </p>
-     *
-     * @param targetMonitor Access function to monitoring target object
-     * @return Target object to monitor
-     */
-    Prop<CONTEXT, TYPE> addTargetMonitorForReset(Function<CONTEXT, Object> targetMonitor);
+    Prop<CONTEXT, TYPE> addResetDependency(Function<CONTEXT, Object> dependencyAccess);
 }
