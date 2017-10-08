@@ -23,7 +23,7 @@ public interface Config {
     Prop<Properties, Integer>   PORT         = getDefiner().define("port", Integer.class);
     Prop<Properties, Double>    AVAILABILITY = getDefiner().define("availability", Double.class,
             props -> ((double) REPLICAS.getFrom(props).size() / 10.0d))
-            .addResetDependency(props -> REPLICAS.getFrom(props));
+            .addResetDependency(REPLICAS);
     Prop<Properties, Env>       ENV          = getDefiner().define("env", Env.class);
 
     class Helper {

@@ -37,4 +37,8 @@ public interface Prop<CONTEXT, TYPE> {
     void overrideDefaultInitializer(Function<CONTEXT, TYPE> defaultInitializer);
 
     Prop<CONTEXT, TYPE> addResetDependency(Function<CONTEXT, Object> dependencyAccess);
+
+    default Prop<CONTEXT, TYPE> addResetDependency(Prop<CONTEXT, ?> propDependency) {
+        return addResetDependency(context -> propDependency.getFrom(context));
+    }
 }
