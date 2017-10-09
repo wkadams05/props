@@ -1,6 +1,7 @@
 package com.yahoo.props.samples.config_from_properties;
 
 import com.google.common.collect.Sets;
+import com.yahoo.props.Prop;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -81,5 +82,6 @@ public class ConfigTest {
         REPLICAS.setTo(configs, Sets.newHashSet(Colo.GQ1, Colo.NE1, Colo.CH1, Colo.SG3, Colo.TW1));
         assertEquals(AVAILABILITY.getFrom(configs), 0.5d);
 
+        assertEquals(configs.stringPropertyNames().stream().filter(Prop::isResetDependencyKey).count(), 1);
     }
 }

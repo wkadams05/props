@@ -13,6 +13,8 @@ import static com.yahoo.props.Utils.nonNullMessage;
 import static java.util.Objects.requireNonNull;
 
 class PropImpl<CONTEXT, TYPE> implements Prop<CONTEXT, TYPE> {
+    static final String RESET_DEPENDENCY_KEY_PREFIX = "@PROPS_RESET_DEPENDENCY@";
+
     private String                          name;
     private Type                            type;
     private Function<CONTEXT, TYPE>         defaultInitializer;
@@ -95,7 +97,7 @@ class PropImpl<CONTEXT, TYPE> implements Prop<CONTEXT, TYPE> {
     }
 
     private String dependencyKey(int no) {
-        return String.format("%s-DEPENDENCY#%d", name, no);
+        return String.format("%s%s#%d", RESET_DEPENDENCY_KEY_PREFIX, name, no);
     }
 
     private String dependencyHash(Object nullableTarget) {
@@ -113,7 +115,6 @@ class PropImpl<CONTEXT, TYPE> implements Prop<CONTEXT, TYPE> {
     private boolean hasDefaultInitializer() {
         return defaultInitializer != null;
     }
-
 
     private boolean hasAnyDependencyChanged(CONTEXT context) {
         for (int no = 0; no < dependencyAccessList.size(); no++) {

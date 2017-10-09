@@ -3,7 +3,13 @@ package com.yahoo.props;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static com.yahoo.props.PropImpl.RESET_DEPENDENCY_KEY_PREFIX;
+
 public interface Prop<CONTEXT, TYPE> {
+    static boolean isResetDependencyKey(String key) {
+        return key != null && key.startsWith(RESET_DEPENDENCY_KEY_PREFIX);
+    }
+
     String getName();
 
     default TYPE getFrom(CONTEXT context) {
