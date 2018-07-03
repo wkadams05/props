@@ -43,13 +43,14 @@
 
   <distributionManagement>
     <snapshotRepository>
-      <id>yahoo-local-snapshot</id>
-      <url>scpexe://artifactory-ssh-proxy.corp.yahoo.com:4443/maven-local-snapshot/</url>
+      <id>lsbe-local-snapshot</id>
+      <name>lsbe-local-snapshot</name>
+      <url>scpexe://artifactory-ssh-proxy.corp.yahoo.com:4443/lsbe-maven-local-snapshot/</url>
     </snapshotRepository>
     <repository>
-      <id>artifactory.ops.yahoo.com-releases</id>
-      <name>artifactory.ops.yahoo.com-releases</name>
-      <url>scpexe://artifactory-ssh-proxy.corp.yahoo.com:4443/maven-local-release/</url>
+      <id>lsbe-local-release</id>
+      <name>lsbe-local-release</name>
+      <url>scpexe://artifactory-ssh-proxy.corp.yahoo.com:4443/lsbe-maven-local-release/</url>
     </repository>
   </distributionManagement>
 
