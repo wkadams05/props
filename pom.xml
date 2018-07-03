@@ -43,13 +43,14 @@
 
   <distributionManagement>
     <snapshotRepository>
-      <id>yahoo-local-snapshot</id>
-      <url>scpexe://artifactory-ssh-proxy.corp.yahoo.com:4443/maven-local-snapshot/</url>
+      <id>lsbe-local-snapshot</id>
+      <name>lsbe-local-snapshot</name>
+      <url>scpexe://artifactory-ssh-proxy.corp.yahoo.com:4443/lsbe-maven-local-snapshot/</url>
     </snapshotRepository>
     <repository>
-      <id>artifactory.ops.yahoo.com-releases</id>
-      <name>artifactory.ops.yahoo.com-releases</name>
-      <url>scpexe://artifactory-ssh-proxy.corp.yahoo.com:4443/maven-local-release/</url>
+      <id>lsbe-local-release</id>
+      <name>lsbe-local-release</name>
+      <url>scpexe://artifactory-ssh-proxy.corp.yahoo.com:4443/lsbe-maven-local-release/</url>
     </repository>
   </distributionManagement>
 
@@ -75,6 +76,16 @@
             <source>${target_jdk_version}</source>
             <target>${target_jdk_version}</target>
           </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.3</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-project-info-reports-plugin</artifactId>
+          <version>2.7</version>
         </plugin>
       </plugins>
     </pluginManagement>

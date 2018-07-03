@@ -1,0 +1,2 @@
+# need versions supporting maven-release virtual artifactory repository
+add yinst pkg yjava_maven 3.0.5_112 *
