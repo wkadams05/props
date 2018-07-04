@@ -5,12 +5,12 @@ _Props_ is a small but useful Java utility which makes property access from/to t
 [![Build Status](https://api.screwdriver.corp.yahoo.com:4443/badge/105768/component/icon)](https://api.screwdriver.corp.yahoo.com:4443/badge/105768/component/target)
 [![Build Status](https://api.screwdriver.corp.yahoo.com:4443/badge/105768/release/icon)](https://api.screwdriver.corp.yahoo.com:4443/badge/105768/release/target)
 
-## Dependency Declaration ([Artifactory](http://artifactory.ops.yahoo.com:4080/webapp/#/artifacts/browse/tree/General/maven-local-release/com/yahoo/props))
+## Dependency Declaration
 ```xml
 <dependency>
     <groupId>com.yahoo</groupId>
     <artifactId>props</artifactId>
-    <version>1.1.6</version>
+    <version>1.2.3</version>
 </dependency>
 ```
 
