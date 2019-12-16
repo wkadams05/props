@@ -1,17 +1,111 @@
 platform: java
-
 shared:
   notifications:
-    email: localsearch-vespa-devel@yahoo-inc.com
+    email: local-search-dev@verizonmedia.com
   plugins:
     test_results:
       type: junit
       parameters:
-        path: "**/target/surefire-reports/**"
+        path: '**/target/surefire-reports/**'
+jobs:
+  component:
+    triggers:
+      - release
+  release:
+    order:
+      - init
+      - assemble
+      - flatten
+      - restore
+      - maven-build
+      - maven-release-prepare
+      - maven-release-perform
+
+---
+version: 4
+shared:
+  settings:
+    email: local-search-dev@verizonmedia.com
+  environment:
+    CONTAINER: oracle-jdk8-current
+    IS_PUBLISH_CONTAINER: 'true'
+    STATECC_BRANCH: test
+    ASCEND_BRANCH: 'true'
+    INPUT_YIDF: '${CONFIG_DIR}/screwdriver/additive-merged.yidf'
+    OUTPUT_STATEFILE: '${ARTIFACTS_DIR}/client-container.state'
+    RESTORE_STATEFILE: '${ARTIFACTS_DIR}/client-container.state'
+    RESTORE_BRANCH: test
+    RESTORE_YINST_START: 'true'
+    JDK_VERSION: '1.8'
+    JDK_MAX_VERSION: '11'
+    MVN_OPTS: ''
+    MVN_PREINST: ''
+    MVN_INSTALL: install
+    MVN_PRESITE: ''
+    MVN_SITE: site
+    MVN_DEPLOY: deploy
+    MVN_SDPROFILE: '-Dscrewdriver3 -Dscrewdriver4'
+    MVN_DEFAULT_SETTINGS: '-Djava.awt.headless=true -Dmin_jdk_version=${JDK_VERSION} -Dmax_jdk_version=${JDK_MAX_VERSION}'
+    MVN_SETTINGS: ''
+    PACK_TARGET_DIR: '${ARTIFACTS_DIR}'
+    PACK_STAGE_DIR: ./target/yinst
+    PACK_YICF_DIR: ./target/yicf
+    PUB_BRANCH: quarantine
+    PUB_MAIL_NOTIF: 'false'
+    PUB_IDENTITY_FILE: ~/.ssh/rsa_dist
+    PUB_FAIL_NO_PACKAGE: 'false'
+    PUB_EXTRA_OPTIONS: '-os all'
+    MAVEN_OPTS: '-Xmx2g'
+    MAVEN_CACHE_DIR: /home/screwdrv/.m2/repository/
+    MAVEN_CACHE_CLEANUP: 'true'
+    ENABLE_MAVEN_CACHE: 'true'
+    MAVEN_CACHE_SCOPE: job
+    RESTART_YKEYKEYD: 'false'
+    ENABLE_MAVEN_OWASP_CHECK: 'false'
+    MAVEN_OWASP_CHECK_VERSION: 4.0.2
+    MAVEN_OWASP_CHECK_SUPPRESSION_FILE: suppression.xml
+    MAVEN_OWASP_CHECK_FAIL_BUILD_ON_CVSS: '11'
+    MAVEN_OWASP_CHECK_SKIP_SYSTEM_SCOPE: 'false'
+    MAVEN_OWASP_CHECK_SKIP_PROVIDED_SCOPE: 'false'
+    MAVEN_OWASP_CHECK_SKIP_RUNTIME_SCOPE: 'false'
+    MAVEN_OWASP_CHECK_SKIP_TEST_SCOPE: 'false'
+    MAVEN_OWASP_CHECK_SKIP_DEPENDENCY_MANAGEMENT: 'true'
+    MAVEN_OWASP_CHECK_ASSEMBLY_ANALYZER_ENABLED: 'false'
+    MAVEN_OWASP_CHECK_FAIL_ON_ERROR: 'false'
+    MAVEN_OWASP_CHECK_FORMAT: ALL
+    ENABLE_EXPORT_SONAR_ENV: 'true'
+    JAVA_ASSEMBLE_ADDITIVE_YIDF_DIRECTORY: screwdriver
 
 jobs:
   component:
-    triggers: [release]
+    template: java-platform/maven-oracle-jdk@stable
+    requires:
+      - ~commit
+      - ~pr
+    image: >-
+      docker.ouroath.com:4443/java_platform/ylinux6-yinst-oraclejdk-latest:latest-1.8
+
   release:
-    order: [init, assemble, flatten, restore, maven-build, maven-release-prepare, maven-release-perform]
+    requires:
+      - component
+    steps:
+      - init: |
+          source sdv4-template-init.sh
+          source sdv4-template-gitclone.sh
+      - assemble: |
+          sdv4-template-assemble.sh
+      - flatten: |
+          sdv4-template-flatten.sh
+      - restore: |
+          sdv4-template-restore.sh
+      - mvn-build: >-
+          echo step 'maven-build' is not defined in template
+          'java-platform/maven-oracle-jdk@stable' or shared steps section. Skipping
+          order parsing..
+      - maven-release-prepare: |
+          sdv4-template-mvn-release-prepare.sh
+      - maven-release-perform: |
+          sdv4-template-mvn-release-perform.sh
+    image: >-
+      docker.ouroath.com:4443/java_platform/ylinux6-yinst-oraclejdk-latest:latest-1.8
     
