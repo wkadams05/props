@@ -82,6 +82,8 @@ jobs:
     requires:
       - ~commit
       - ~pr
+    steps:
+      - preinit: export LANG=en_US.UTF-8
     image: >-
       docker.ouroath.com:4443/java_platform/ylinux6-yinst-oraclejdk-latest:latest-1.8
 
@@ -89,6 +91,7 @@ jobs:
     requires:
       - component
     steps:
+      - preinit: export LANG=en_US.UTF-8
       - init: |
           source sdv4-template-init.sh
           source sdv4-template-gitclone.sh
