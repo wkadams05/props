@@ -11,8 +11,8 @@
 <!-- /TOC -->
 
 ## Build
-[![Build Status](https://api.screwdriver.corp.yahoo.com:4443/badge/105768/component/icon)](https://api.screwdriver.corp.yahoo.com:4443/badge/105768/component/target)
-[![Build Status](https://api.screwdriver.corp.yahoo.com:4443/badge/105768/release/icon)](https://api.screwdriver.corp.yahoo.com:4443/badge/105768/release/target)
+[![Props component](https://screwdriver.ouroath.com/pipelines/105768/component/badge)](https://screwdriver.ouroath.com/pipelines/105768) [![Props release](https://screwdriver.ouroath.com/pipelines/105768/release/badge)](https://screwdriver.ouroath.com/pipelines/105768)
+
 ```xml
 <dependency>
     <groupId>com.yahoo</groupId>
