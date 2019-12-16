@@ -97,6 +97,7 @@ jobs:
       - flatten: |
           sdv4-template-flatten.sh
       - restore: |
+          yinst install yjava_clover_license -b test
           sdv4-template-restore.sh
       - mvn-build: >-
           echo step 'maven-build' is not defined in template
