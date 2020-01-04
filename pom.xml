@@ -115,7 +115,7 @@
                 <id>clover</id>
                 <phase>prepare-package</phase>
                 <goals>
-                  <goal>instrument-test</goal>
+                  <goal>instrument</goal>
                   <goal>clover</goal>
                 </goals>
                 <configuration>
