@@ -17,7 +17,7 @@
     <maven-release-plugin.version>2.5.2</maven-release-plugin.version>
     <maven-surefire-plugin.version>2.17</maven-surefire-plugin.version>
     <maven-surefire-report-plugin.version>${maven-surefire-plugin.version}</maven-surefire-report-plugin.version>
-    <clover-maven-plugin.version>4.2.0</clover-maven-plugin.version>
+    <clover-maven-plugin.version>4.4.0</clover-maven-plugin.version>
     <wagon-ssh-external.version>1.0-beta-6</wagon-ssh-external.version>
     <target_jdk_version>1.8</target_jdk_version>
     <buildtype>test</buildtype>
@@ -127,10 +127,6 @@
                 </configuration>
               </execution>
             </executions>
-            <configuration>
-              <includesAllSourceRoots>false</includesAllSourceRoots>
-              <jdk>${target_jdk_version}</jdk>
-            </configuration>
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
