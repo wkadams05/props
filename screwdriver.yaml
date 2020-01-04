@@ -58,6 +58,12 @@ jobs:
   pull-request:
     template: java-platform/maven-oracle-jdk@stable
     requires: [~pr]
+    steps:
+      - presonar: |
+          ls -al .
+          ls -al ./target
+          ls -al ./target/site
+          ls -al ./target/site/clover
     image: >-
       docker.ouroath.com:4443/java_platform/ylinux6-yinst-oraclejdk-latest:latest-1.8
 
