@@ -1,27 +1,3 @@
-#platform: java
-#shared:
-#  notifications:
-#    email: local-search-dev@verizonmedia.com
-#  plugins:
-#    test_results:
-#      type: junit
-#      parameters:
-#        path: '**/target/surefire-reports/**'
-#jobs:
-#  component:
-#    triggers:
-#      - release
-#  release:
-#    order:
-#      - init
-#      - assemble
-#      - flatten
-#      - restore
-#      - maven-build
-#      - maven-release-prepare
-#      - maven-release-perform
-#
-#---
 version: 4
 shared:
   settings:
@@ -75,19 +51,30 @@ shared:
     MAVEN_OWASP_CHECK_FORMAT: ALL
     ENABLE_EXPORT_SONAR_ENV: 'true'
     JAVA_ASSEMBLE_ADDITIVE_YIDF_DIRECTORY: screwdriver
+  steps:
+    - preinit: export LANG=en_US.UTF-8
 
 jobs:
-  component:
-    template: java-platform/maven-oracle-jdk@stable
-    requires:
-      - ~commit
-      - ~pr
+  pull-request:
+    template: java-platform/maven-open-jdk-8-rhel7@1.0.9
+    requires: [~pr]
     steps:
-      - preinit: export LANG=en_US.UTF-8
+      - presonar: |
+          ls -al .
+          ls -al ./target
+          ls -al ./target/site
+          ls -al ./target/site/clover
     image: >-
-      docker.ouroath.com:4443/java_platform/ylinux6-yinst-oraclejdk-latest:latest-1.8
+      docker.ouroath.com:4443/java_platform/ylinux7-yinst-openjdk-latest:latest-11
+
+  component:
+    template: java-platform/maven-open-jdk-8-rhel7@1.0.9
+    requires: [~commit]
+    image: >-
+      docker.ouroath.com:4443/java_platform/ylinux7-yinst-openjdk-latest:latest-11
 
   release:
+    template: java-platform/maven-open-jdk-8-rhel7@1.0.9
     requires:
       - component
     steps:
@@ -103,12 +90,12 @@ jobs:
           sdv4-template-restore.sh
       - mvn-build: >-
           echo step 'maven-build' is not defined in template
-          'java-platform/maven-oracle-jdk@stable' or shared steps section. Skipping
+          'java-platform/maven-open-jdk-8-rhel7@stable' or shared steps section. Skipping
           order parsing..
       - maven-release-prepare: |
           sdv4-template-mvn-release-prepare.sh
       - maven-release-perform: |
           sdv4-template-mvn-release-perform.sh
     image: >-
-      docker.ouroath.com:4443/java_platform/ylinux6-yinst-oraclejdk-latest:latest-1.8
+      docker.ouroath.com:4443/java_platform/ylinux7-yinst-openjdk-latest:latest-11
     
