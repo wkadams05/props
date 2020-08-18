@@ -51,19 +51,30 @@ shared:
     MAVEN_OWASP_CHECK_FORMAT: ALL
     ENABLE_EXPORT_SONAR_ENV: 'true'
     JAVA_ASSEMBLE_ADDITIVE_YIDF_DIRECTORY: screwdriver
+  steps:
+    - preinit: export LANG=en_US.UTF-8
 
 jobs:
+  pull-request:
+    template: java-platform/maven-open-jdk-8-rhel7@1.0.9
+    requires: [~pr]
+    steps:
+      - presonar: |
+          ls -al .
+          ls -al ./target
+          ls -al ./target/site
+          ls -al ./target/site/clover
+    image: >-
+      docker.ouroath.com:4443/java_platform/ylinux7-yinst-openjdk-latest:latest-11
+
   component:
     template: java-platform/maven-open-jdk-8-rhel7@1.0.9
-    requires:
-      - ~commit
-      - ~pr
-    steps:
-      - preinit: export LANG=en_US.UTF-8
+    requires: [~commit]
     image: >-
       docker.ouroath.com:4443/java_platform/ylinux7-yinst-openjdk-latest:latest-11
 
   release:
+    template: java-platform/maven-open-jdk-8-rhel7@1.0.9
     requires:
       - component
     steps:
