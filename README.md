@@ -11,13 +11,11 @@
 <!-- /TOC -->
 
 ## Overview
-[Props](https://git.ouroath.com/localsearch/props) is a Java library that makes _Property_ access to any _Context_ easy, safe and powerful.  This library is proven to be remarkably useful in LSBE projects that achieved both development productive and code quality boosts.
+[Props](https://github.com/jaewoongchoi1/props) is a Java library that makes _Property_ (**DO NOT** CONFUSE with `java.util.Properties`) access to any _Context_ easy, safe and powerful.  This library is proven to be remarkably useful in LSBE projects that achieved both development productive and code quality boosts.
 
 Props is originated from the word Properties.  Props aims to be props for developers.
 
 ### Property, Context, Component and Container
-First, please **DO NOT** confuse _Property_ here with `java.util.Properties`!  Property in Props is a generic term following the definition below.
- 
 A _Property_ is a named Java object attached to a _Context_ object managed by some Java _Container_ service.  A _Context_ usually holds and carries multiple properties over its lifespan and allows access to a chain of user _Components_.
 
 Here are a few examples (out of tons).
