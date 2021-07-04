@@ -10,24 +10,13 @@
 - [Usage References](#usage-references)
 <!-- /TOC -->
 
-## Build
-[![Props component](https://screwdriver.ouroath.com/pipelines/105768/component/badge)](https://screwdriver.ouroath.com/pipelines/105768) [![Props release](https://screwdriver.ouroath.com/pipelines/105768/release/badge)](https://screwdriver.ouroath.com/pipelines/105768)
-
-```xml
-<dependency>
-    <groupId>com.yahoo</groupId>
-    <artifactId>props</artifactId>
-    <version>1.2.4</version>
-</dependency>
-```
-
 ## Overview
 [Props](https://git.ouroath.com/localsearch/props) is a Java library that makes _Property_ access to any _Context_ easy, safe and powerful.  This library is proven to be remarkably useful in LSBE projects that achieved both development productive and code quality boosts.
 
 Props is originated from the word Properties.  Props aims to be props for developers.
 
 ### Property, Context, Component and Container
-First, do not confuse _Property_ here with `java.util.Properties`!  Property in Props is used as a generic term that follows the definition below.
+First, please **DO NOT** confuse _Property_ here with `java.util.Properties`!  Property in Props is a generic term following the definition below.
  
 A _Property_ is a named Java object attached to a _Context_ object managed by some Java _Container_ service.  A _Context_ usually holds and carries multiple properties over its lifespan and allows access to a chain of user _Components_.
 
@@ -249,6 +238,6 @@ Here is the overall process review.
 ## Usage References
 | Type | Name | Container | Context | Property | Link | Comment |
 |---|---|---|---|---|---|---|
-|Production|Local Search|Vespa|Query|Query properties|[com.yahoo.ls.searcher.query.QueryProperty.java](https://git.ouroath.com/localsearch/lsbe-hv/blob/master/src/main/java/com/yahoo/ls/searcher/query/QueryProperty.java)|The serious most use case. Over 220 properties for ~50 Searcher components in Vespa|
-|Production(EOL'd)|Concept Search|Vespa|HttpRequestContext|HTTP parameters w/ overrides|[com.yahoo.concept.api.HttpParam.java](https://git.ouroath.com/localsearch/concept-search/blob/master/src/main/java/com/yahoo/concept/api/HttpParam.java)||
-|Test code as tutorial|-|Java SDK|`java.util.Properties`|keyed `java.util.String` property|[com/yahoo/props/samples/config_from_properties](https://git.ouroath.com/localsearch/props/tree/master/src/test/java/com/yahoo/props/samples/config_from_properties)||
+|Production|Local Search|Vespa|Query|Query properties|[com.yahoo.ls.searcher.query.QueryProperty.java](https://git.vzbuilders.com/localsearch/lsbe-hv/blob/master/src/main/java/com/yahoo/ls/searcher/query/QueryProperty.java)|The serious most use case. Over 220 properties for ~50 Searcher components in Vespa|
+|Production(EOL'd)|Concept Search|Vespa|HttpRequestContext|HTTP parameters w/ overrides|[com.yahoo.concept.api.HttpParam.java](https://git.vzbuilders.com/localsearch/concept-search/blob/master/src/main/java/com/yahoo/concept/api/HttpParam.java)||
+|Test code as tutorial|-|Java SDK|`java.util.Properties`|keyed `java.util.String` property|[com/yahoo/props/samples/config_from_properties](src/test/java/com/yahoo/props/samples/config_from_properties)||

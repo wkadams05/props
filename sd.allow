@@ -1,4 +1,0 @@
-version: 1
-push:
-  # Grant Screwdriver Project 105768 access
-  - screwdriver:105768
