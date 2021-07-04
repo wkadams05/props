@@ -24,10 +24,10 @@ public class ConfigTest {
         ));
 
         assertEquals(CNAME.getFrom(configs), "v1.yahooapis.com");
-        assertEquals(MAIN.getFrom(configs), Colo.GQ1);
+        assertEquals(MAIN.getFrom(configs), Region.GQ1);
         assertEquals(REPLICAS.getFrom(configs).size(), 2);
-        assertTrue(REPLICAS.getFrom(configs).contains(Colo.BF1));
-        assertTrue(REPLICAS.getFrom(configs).contains(Colo.NE1));
+        assertTrue(REPLICAS.getFrom(configs).contains(Region.BF1));
+        assertTrue(REPLICAS.getFrom(configs).contains(Region.NE1));
         assertEquals(AVAILABILITY.getFrom(configs), 0.2d);// 2 out of 10 (initial)
         assertTrue(PORT.isAbsent(configs));
         assertTrue(!PORT.isPresent(configs));
@@ -40,13 +40,13 @@ public class ConfigTest {
         assertEquals(configs.getProperty("cname"), "v2.yahooapis.com");
         assertEquals(CNAME.getFrom(configs), "v2.yahooapis.com");
 
-        MAIN.setTo(configs, Colo.BF1);
+        MAIN.setTo(configs, Region.BF1);
         assertEquals(configs.getProperty("main"), "BF1");
-        assertEquals(MAIN.getFrom(configs), Colo.BF1);
+        assertEquals(MAIN.getFrom(configs), Region.BF1);
 
-        REPLICAS.setTo(configs, Sets.newHashSet(Colo.GQ1, Colo.NE1, Colo.CH1, Colo.IR2));
+        REPLICAS.setTo(configs, Sets.newHashSet(Region.GQ1, Region.NE1, Region.CH1, Region.IR2));
         assertEquals(configs.getProperty("replicas"), "CH1,GQ1,IR2,NE1");
-        Set<Colo> replicas = REPLICAS.getFrom(configs);
+        Set<Region> replicas = REPLICAS.getFrom(configs);
         assertEquals(replicas.size(), 4);
 
         PORT.setToIfPresent(configs, 9999);
@@ -64,9 +64,9 @@ public class ConfigTest {
 
         // target monitoring test
         assertEquals(AVAILABILITY.getFrom(configs), 0.4d);
-        REPLICAS.setTo(configs, Sets.newHashSet(Colo.GQ1, Colo.NE1, Colo.CH1));
+        REPLICAS.setTo(configs, Sets.newHashSet(Region.GQ1, Region.NE1, Region.CH1));
         assertEquals(AVAILABILITY.getFrom(configs), 0.3d);
-        REPLICAS.setTo(configs, Sets.newHashSet(Colo.GQ1, Colo.NE1, Colo.CH1, Colo.SG3, Colo.TW1));
+        REPLICAS.setTo(configs, Sets.newHashSet(Region.GQ1, Region.NE1, Region.CH1, Region.SG3, Region.TW1));
         assertEquals(AVAILABILITY.getFrom(configs), 0.5d);
 
         AVAILABILITY.setTo(configs, 0.12345678d);
@@ -79,7 +79,7 @@ public class ConfigTest {
 
         REPLICAS.setTo(configs, null);
         assertEquals(AVAILABILITY.getFrom(configs), 0.0d);
-        REPLICAS.setTo(configs, Sets.newHashSet(Colo.GQ1, Colo.NE1, Colo.CH1, Colo.SG3, Colo.TW1));
+        REPLICAS.setTo(configs, Sets.newHashSet(Region.GQ1, Region.NE1, Region.CH1, Region.SG3, Region.TW1));
         assertEquals(AVAILABILITY.getFrom(configs), 0.5d);
 
         assertEquals(configs.stringPropertyNames().stream().filter(Prop::isResetDependencyKey).count(), 1);
