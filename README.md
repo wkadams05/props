@@ -1,7 +1,6 @@
 # Props
 
 <!-- TOC depthFrom:2 depthTo:4 withLinks:1 updateOnSave:1 orderedList:0 -->
-- [Build](#build)
 - [Overview](#overview)
    - [Property, Context, Component and Container](#property-context-component-and-container)
    - [Property Access - Inevitably Inconvenient and Error-prone](#property-access---inevitably-inconvenient-and-error-prone)
@@ -11,7 +10,7 @@
 <!-- /TOC -->
 
 ## Overview
-[Props](https://github.com/jaewoongchoi1/props) is a Java library that makes _Property_ (**DO NOT** CONFUSE with `java.util.Properties`) access to any _Context_ easy, safe and powerful.  This library is proven to be remarkably useful in LSBE projects that achieved both development productive and code quality boosts.
+[Props](https://github.com/jaewoongchoi1/props) is a Java library that makes _Property_ (**DO NOT** CONFUSE with `java.util.Properties`) access to any _Context_ easy, safe and powerful.  This library is proven to be remarkably useful in Local Search projects that achieved both development productive and code quality boosts.
 
 Props is originated from the word Properties.  Props aims to be props for developers.
 
